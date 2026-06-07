@@ -37,7 +37,7 @@ class Program
             }
         });
 
-        _ = app.RunAsync("http://localhost:5067");
+        _ = app.RunAsync("http://localhost:5068");
 
         Admin.ID = ulong.Parse(File.ReadAllText("admin.txt"));
 
