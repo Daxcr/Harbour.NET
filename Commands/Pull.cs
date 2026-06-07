@@ -72,7 +72,7 @@ public class PullCommand : InteractionModuleBase<SocketInteractionContext>
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "git",
-                        Arguments = $"-C bin/Bots/{BotID}/_dl reset --hard HEAD",
+                        Arguments = $"-C bin/Bots/{BotID}/_dl fetch --all && git -C bin/Bots/{BotID}/_dl reset --hard origin/main",
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         UseShellExecute = false,
