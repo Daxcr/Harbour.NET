@@ -65,7 +65,11 @@ public class DeployCommand : InteractionModuleBase<SocketInteractionContext>
                 CreateNoWindow = true,
                 WorkingDirectory = Path.GetDirectoryName(exe),
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                Environment =
+                {
+                    ["TOKEN"] = File.ReadAllText($"bin/Bots/{BotID}/token.txt"),
+                }
             }
         };
 
