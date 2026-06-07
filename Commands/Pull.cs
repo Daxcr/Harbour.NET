@@ -67,25 +67,44 @@ public class PullCommand : InteractionModuleBase<SocketInteractionContext>
                 await ModifyOriginalResponseAsync(message => message.Content = "Repo has been cloned! Run `/compile` to build your code.");
             } else
             {
-                Process process = new Process
+                Process fetch = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "git",
-                        Arguments = $"-C bin/Bots/{BotID}/_dl fetch --all && git -C bin/Bots/{BotID}/_dl reset --hard origin/main",
+                        Arguments = $"-C bin/Bots/{BotID}/_dl fetch --all",
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         UseShellExecute = false,
                         CreateNoWindow = true
                     }
                 };
-
-                process.Start();
-                await process.WaitForExitAsync();
-
-                if (process.ExitCode != 0)
+                fetch.Start();
+                await fetch.WaitForExitAsync();
+                if (fetch.ExitCode != 0)
                 {
-                    string error = await process.StandardError.ReadToEndAsync();
+                    string error = await fetch.StandardError.ReadToEndAsync();
+                    await ModifyOriginalResponseAsync(message => message.Content = $"Pull failed: `{error}`");
+                    return;
+                }
+
+                Process reset = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "git",
+                        Arguments = $"-C bin/Bots/{BotID}/_dl reset --hard origin/main",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+                reset.Start();
+                await reset.WaitForExitAsync();
+                if (reset.ExitCode != 0)
+                {
+                    string error = await reset.StandardError.ReadToEndAsync();
                     await ModifyOriginalResponseAsync(message => message.Content = $"Pull failed: `{error}`");
                     return;
                 }
