@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harbour.NET</title>
+    <link rel="icon" href="https://dax.cr/icon.png" type="image/png">
+    <style>
+        @font-face {
+            font-family: "Lexend";
+            src: url("/Harbour.NET/Lexend-Regular.ttf");
+        }
+        body {
+            background-color: #1b1b20;
+            color: #7a7a99;
+            font-family: Lexend;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            filter: drop-shadow(0 0 400px #0000004c);
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            background-image: url("https://dax.cr/icon.png");
+            background-size: 30vw;
+            left: 46vw;
+            top: 20vh;
+            width: 100%;
+            height: 100%;
+            z-index: -9999;
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            filter: blur(5px);
+        }
+        .container::after {
+            content: "";
+            position: absolute;
+            background-image: url("https://dax.cr/x.png");
+            background-size: 30vw;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -9999;
+            background-repeat: repeat;
+            opacity: 0.055;
+            background-size: 50px;
+        }
+        .widget {
+            background-color: #262630;
+            width: 350px;
+            border-radius: 8px;
+            border: 1px solid #353549;
+            box-shadow: 0 3px #0000005a;
+        }
+        .title {
+            font-size: 40px;
+            color: #ffffff;
+            z-index: 999;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            margin-bottom: 40px;
+        }
+        input {
+            background-color: #1b1b20;
+            outline: 1px solid #353549;
+            border: none;
+            border-top: 3px solid #0000005a;
+            color: #ffffff;
+            width: calc(100% - 18px);
+            height: 35px;
+            border-radius: 6px;
+            margin-top: 4px;
+            font-size: 16px;
+            padding-left: 9px;
+            padding-right: 9px;
+            font-family: Lexend;
+        }
+        input::placeholder {
+            color: #7a7a99;
+        }
+        button {
+            background-color: #4bcc51;
+            border: none;
+            color: #000000;
+            width: 100%;
+            height: 38px;
+            border-radius: 6px;
+            margin-top: 4px;
+            font-size: 16px;
+            font-family: Lexend;
+            filter: drop-shadow(0 3px #348838);
+            transition: background-color 0.2s, filter 0.2s ease, color 0.2s ease;
+        }
+        button.deactive {
+            background-color: #3a3a47;
+            color: #7a7a99;
+            filter: drop-shadow(0 0px #3a3a47);
+            transition: background-color 0.2s, filter 0.2s ease, color 0.2s ease;
+        }
+        button:hover:not(.deactive) {
+            background-color: #348838;
+            filter: drop-shadow(0 3px #256629);
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .section {
+            padding-bottom: 10px;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration-thickness: 2px;
+            color: #7a7a99;
+            transition: color 0.2s ease, text-decoration-thickness 0.2s ease;
+        }
+        a:hover {
+            text-decoration-thickness: 3px;
+            color: #ffffff;
+        }
+        .social {
+            padding: 24px;
+            opacity: 0.6;
+        }
+        .social:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Harbour.NET</div>
+        <div class="subtitle">Developed by <a href="https://github.com/Daxcr/Harbour.NET" target="_blank">Daxcr</a></div>
+        <div class="widget">
+            <div style="padding: 30px">
+                <div class="section" style="margin-top: -10px;">
+                    Token<br>
+                    <input type="password" placeholder="Bot account token" id="token">
+                </div>
+                <div class="section">
+                    Key<br>
+                    <input type="text" placeholder="Verification key" id="key">
+                </div>
+                <div class="section" style="padding-bottom: 0; margin-top: 23px;">
+                    <button id="send">Send Token</button>
+                </div>
+            </div>
+        </div>
+        <div class="widget" style="margin-top: 24px;">
+            <div style="padding: 30px">
+                Note: you can generate a key through Discord with <span style="padding: 2px; background-color: #1b1b20; border-radius: 6px;">/token</span>. They last for only 60 seconds, so be fast.
+            </div>
+        </div>
+        <div style="margin-top: 24px;">
+            <a href="https://discord.com/invite/6vbhdzmGq7" class="social"><img src="https://dax.cr/socialicons/dsc.png" width="25px"></a>
+            <a href="https://instagram.com/daxcrdev" class="social"><img src="https://dax.cr/socialicons/insta.png" width="25px"></a>
+            <a href="https://x.com/DaxcrDev" class="social"><img src="https://dax.cr/socialicons/x.png" width="25px"></a>
+            <a href="https://github.com/Daxcr" class="social"><img src="https://dax.cr/socialicons/github.png" width="25px"></a>
+        </div>
+    </div>
+</body>
+<script>
+    const send = document.getElementById("send");
+    const token = document.getElementById("token");
+    const key = document.getElementById("key");
+    send.onclick = async () => {
+        send.disabled = true;
+        send.classList.add("deactive");
+        send.innerHTML = "Waiting...";
+        const response = await fetch("/Harbour.NET/api/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "token": token.value, 
+                "key": key.value 
+            })
+        });
+        if (response.status === 401) {
+            alert("401 Unauthorised");
+        }
+        else if (!response.ok) {
+            alert("Something went wrong");
+        }
+        send.disabled = false;
+        send.classList.remove("deactive");
+        send.innerHTML = "Send Token";
+    }
+    if (window.location.protocol !== "https" && !["localhost", "127.0.0.1", "::1"].includes(window.location.hostname)) {
+        alert("Please use HTTPS, as your tokens may become exposed without it.");
+    }
+</script>
+</html>
