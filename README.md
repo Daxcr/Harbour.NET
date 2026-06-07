@@ -11,6 +11,3 @@ A basic C# Discord bot which lets you deploy other C# Discord bots.
 - **/stage**: Replace the bot's current assembly with the newly compiled assembly.
 - **/deploy**: Deploys a bot.
 - **/stop**: Stops a bot.
-
-## Commands
-
